@@ -157,6 +157,7 @@ const LOWER: Record<string, string[]> = {
 
 const COMPS = [
   { id: 'rpl', name: 'РПЛ', type: 'league', tier: 1, level: '1-й уровень (16 команд)', logo: '/logos/leagues/rpl.svg' },
+  { id: 'supercup', name: 'Суперкубок России', type: 'cup', level: 'Суперкубок · Матч за трофей', logo: '/logos/leagues/supercup.svg' },
   { id: 'cup', name: 'Кубок России', type: 'cup', level: 'Национальный кубок', logo: '/logos/leagues/cup.svg' },
   { id: 'fnl', name: 'Первая лига', type: 'league', tier: 2, level: '2-й уровень (18 команд)', logo: '/logos/leagues/fnl.svg' },
   { id: '2la_gold', name: 'Вторая лига А · Золото', type: 'league', tier: 3, cat: '2la', level: '3-й уровень (10 команд)', logo: '/logos/leagues/2la.svg' },
@@ -736,6 +737,7 @@ function load() {
   }
 
   ensureInitialBudgets();
+  ensureSuperCupFixture();
   save();
 }
 
@@ -803,6 +805,7 @@ function age(p: any, date: string) {
 }
 function roundLabel(f: any) {
   if (f.label) return f.label;
+  if (f.comp === 'supercup') return 'Матч за Суперкубок России';
   if (f.comp === 'cup') {
     if (f.cupPath === 'rpl_group') {
       return `Путь РПЛ · ${f.round}-й тур`;
@@ -1049,6 +1052,37 @@ function ensureInitialBudgets() {
   }
 
   if (changed) save();
+}
+
+function ensureSuperCupFixture(sName?: string) {
+  const season = sName || S();
+  if (!Array.isArray(db.fixtures)) db.fixtures = [];
+  const exists = db.fixtures.some((f: any) => f.comp === 'supercup' && f.season === season);
+  if (!exists) {
+    const zenit = db.teams.find((t: any) => t.name === 'Зенит');
+    const krasnodar = db.teams.find((t: any) => t.name === 'Краснодар');
+    const homeTeam = zenit || db.teams.find((t: any) => t.comp === 'rpl');
+    const awayTeam = krasnodar || db.teams.filter((t: any) => t.comp === 'rpl' && t.id !== homeTeam?.id)[0];
+    if (homeTeam && awayTeam) {
+      db.fixtures.unshift({
+        id: uid(),
+        comp: 'supercup',
+        season,
+        round: 1,
+        cupPath: 'supercup',
+        label: 'Суперкубок России · Финал',
+        home: homeTeam.id,
+        away: awayTeam.id,
+        date: '2026-07-11',
+        time: '17:30',
+        stadium: '«Ак Барс Арена» (нейтральное поле, г. Казань)',
+        city: 'Казань',
+        status: 'scheduled',
+        neutralField: true
+      });
+      save();
+    }
+  }
 }
 
 function calculateCupPrizeSuggestions() {
@@ -2127,7 +2161,7 @@ function finish(id: string) {
   m.motm = getMatchMotm(m, f, HName, AName, cH, cA);
   if (m.motm) f.motm = { pid: m.motm.pid, name: m.motm.name, rating: m.motm.rating };
   putMatch(id, m);
-  if (f.comp === 'cup' && f.hg === f.ag && !f.pen) f.pen = shootout(f);
+  if ((f.comp === 'cup' || f.comp === 'supercup') && f.hg === f.ag && !f.pen) f.pen = shootout(f);
   f.status = 'done';
   updateRefereeStats(f, m.events);
   if (f.comp === 'cup') advanceCup();
@@ -2242,7 +2276,7 @@ async function bgResults(list: any[]) {
       x = { hg: poisson(1.45, r), ag: poisson(1.1, r) };
     }
     f.hg = +x.hg; f.ag = +x.ag; f.note = x.note || '';
-    if (f.comp === 'cup' && f.hg === f.ag) {
+    if ((f.comp === 'cup' || f.comp === 'supercup') && f.hg === f.ag) {
       const w = x.winner === 'home' || x.winner === 'away' ? x.winner : (rng(f.id)() < .5 ? 'home' : 'away');
       f.pen = { hg: w === 'home' ? 5 : 4, ag: w === 'home' ? 4 : 5, winner: w };
     }
@@ -2332,6 +2366,7 @@ function genSeason(start: string, name: string) {
 
   // Очищаем старые матчи текущего сезона перед генерацией
   db.fixtures = db.fixtures.filter((f: any) => f.season !== season);
+  ensureSuperCupFixture(season);
 
   const r = rng('season' + name);
   for (const comp of COMPS.filter(x => x.type === 'league')) {
@@ -2873,7 +2908,10 @@ const pubFx = (f: any) => ({
   assistants: (f.comp === 'rpl' || f.comp === 'cup') ? (f.assistants || []) : [],
   reserveReferee: (f.comp === 'rpl' || f.comp === 'cup') ? (f.reserveReferee || null) : null,
   varReferee: (f.comp === 'rpl' || f.comp === 'cup') ? (f.varReferee || null) : null,
-  avarReferee: (f.comp === 'rpl' || f.comp === 'cup') ? (f.avarReferee || null) : null
+  avarReferee: (f.comp === 'rpl' || f.comp === 'cup') ? (f.avarReferee || null) : null,
+  stadium: f.stadium || (f.home ? team(f.home)?.stadium : null),
+  city: f.city || (f.home ? team(f.home)?.city : null),
+  neutralField: !!f.neutralField
 });
 
 app.post('/api/login', (req, res) => {
@@ -3952,7 +3990,7 @@ app.post('/api/admin/fixture', admin, (req, res) => {
     f.ag = +req.body.ag;
     f.status = 'done';
     f.st = null;
-    if (f.comp === 'cup' && f.hg === f.ag) f.pen = shootout(f);
+    if ((f.comp === 'cup' || f.comp === 'supercup') && f.hg === f.ag) f.pen = shootout(f);
     invalidateAgg();
     advanceCup();
   }

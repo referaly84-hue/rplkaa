@@ -21,7 +21,7 @@ export interface CompetitionRegulation {
   id: string;
   name: string;
   tier: number;
-  system: 'autumn-spring' | 'spring-autumn';
+  system: 'autumn-spring' | 'spring-autumn' | 'single-match';
   totalTeams: number;
   zones: LeagueZoneRule[];
   rulesSummary: string[];
@@ -81,6 +81,28 @@ export const LEAGUE_REGULATIONS: Record<string, CompetitionRegulation> = {
       '13-е место РПЛ играет стыки против 4-го места Первой лиги.',
       '14-е место РПЛ играет стыки против 3-го места Первой лиги.',
       'Формат стыков: 2 матча (1-й в Первой лиге, 2-й в РПЛ). Ничья -> экстра-таймы (2×15) -> серия пенальти. Без правила выездного гола.'
+    ]
+  },
+  supercup: {
+    id: 'supercup',
+    name: 'Суперкубок России',
+    tier: 1,
+    system: 'single-match',
+    totalTeams: 2,
+    zones: [
+      {
+        posFrom: 1,
+        posTo: 1,
+        zone: 'gold',
+        title: 'Обладатель Суперкубка России',
+        description: 'Победитель матча за национальный Суперкубок.'
+      }
+    ],
+    rulesSummary: [
+      'Матч открытия клубного футбольного сезона в России.',
+      'Участники: Действующий Чемпион России (РПЛ) против Обладателя Кубка России.',
+      'Формат: 1 матч на нейтральном стадионе.',
+      'При ничейном счёте в основное время назначается серия 11-метровых ударов (пенальти) без овертайма.'
     ]
   },
   fnl: {

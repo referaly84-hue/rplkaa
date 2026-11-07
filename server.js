@@ -475,6 +475,28 @@ var LEAGUE_REGULATIONS = {
       "\u0424\u043E\u0440\u043C\u0430\u0442 \u0441\u0442\u044B\u043A\u043E\u0432: 2 \u043C\u0430\u0442\u0447\u0430 (1-\u0439 \u0432 \u041F\u0435\u0440\u0432\u043E\u0439 \u043B\u0438\u0433\u0435, 2-\u0439 \u0432 \u0420\u041F\u041B). \u041D\u0438\u0447\u044C\u044F -> \u044D\u043A\u0441\u0442\u0440\u0430-\u0442\u0430\u0439\u043C\u044B (2\xD715) -> \u0441\u0435\u0440\u0438\u044F \u043F\u0435\u043D\u0430\u043B\u044C\u0442\u0438. \u0411\u0435\u0437 \u043F\u0440\u0430\u0432\u0438\u043B\u0430 \u0432\u044B\u0435\u0437\u0434\u043D\u043E\u0433\u043E \u0433\u043E\u043B\u0430."
     ]
   },
+  supercup: {
+    id: "supercup",
+    name: "\u0421\u0443\u043F\u0435\u0440\u043A\u0443\u0431\u043E\u043A \u0420\u043E\u0441\u0441\u0438\u0438",
+    tier: 1,
+    system: "single-match",
+    totalTeams: 2,
+    zones: [
+      {
+        posFrom: 1,
+        posTo: 1,
+        zone: "gold",
+        title: "\u041E\u0431\u043B\u0430\u0434\u0430\u0442\u0435\u043B\u044C \u0421\u0443\u043F\u0435\u0440\u043A\u0443\u0431\u043A\u0430 \u0420\u043E\u0441\u0441\u0438\u0438",
+        description: "\u041F\u043E\u0431\u0435\u0434\u0438\u0442\u0435\u043B\u044C \u043C\u0430\u0442\u0447\u0430 \u0437\u0430 \u043D\u0430\u0446\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0439 \u0421\u0443\u043F\u0435\u0440\u043A\u0443\u0431\u043E\u043A."
+      }
+    ],
+    rulesSummary: [
+      "\u041C\u0430\u0442\u0447 \u043E\u0442\u043A\u0440\u044B\u0442\u0438\u044F \u043A\u043B\u0443\u0431\u043D\u043E\u0433\u043E \u0444\u0443\u0442\u0431\u043E\u043B\u044C\u043D\u043E\u0433\u043E \u0441\u0435\u0437\u043E\u043D\u0430 \u0432 \u0420\u043E\u0441\u0441\u0438\u0438.",
+      "\u0423\u0447\u0430\u0441\u0442\u043D\u0438\u043A\u0438: \u0414\u0435\u0439\u0441\u0442\u0432\u0443\u044E\u0449\u0438\u0439 \u0427\u0435\u043C\u043F\u0438\u043E\u043D \u0420\u043E\u0441\u0441\u0438\u0438 (\u0420\u041F\u041B) \u043F\u0440\u043E\u0442\u0438\u0432 \u041E\u0431\u043B\u0430\u0434\u0430\u0442\u0435\u043B\u044F \u041A\u0443\u0431\u043A\u0430 \u0420\u043E\u0441\u0441\u0438\u0438.",
+      "\u0424\u043E\u0440\u043C\u0430\u0442: 1 \u043C\u0430\u0442\u0447 \u043D\u0430 \u043D\u0435\u0439\u0442\u0440\u0430\u043B\u044C\u043D\u043E\u043C \u0441\u0442\u0430\u0434\u0438\u043E\u043D\u0435.",
+      "\u041F\u0440\u0438 \u043D\u0438\u0447\u0435\u0439\u043D\u043E\u043C \u0441\u0447\u0451\u0442\u0435 \u0432 \u043E\u0441\u043D\u043E\u0432\u043D\u043E\u0435 \u0432\u0440\u0435\u043C\u044F \u043D\u0430\u0437\u043D\u0430\u0447\u0430\u0435\u0442\u0441\u044F \u0441\u0435\u0440\u0438\u044F 11-\u043C\u0435\u0442\u0440\u043E\u0432\u044B\u0445 \u0443\u0434\u0430\u0440\u043E\u0432 (\u043F\u0435\u043D\u0430\u043B\u044C\u0442\u0438) \u0431\u0435\u0437 \u043E\u0432\u0435\u0440\u0442\u0430\u0439\u043C\u0430."
+    ]
+  },
   fnl: {
     id: "fnl",
     name: "\u041F\u0435\u0440\u0432\u0430\u044F \u043B\u0438\u0433\u0430 (\u041C\u0415\u041B\u0411\u0415\u0422-\u041F\u0435\u0440\u0432\u0430\u044F \u041B\u0438\u0433\u0430)",
@@ -2457,6 +2479,7 @@ var LOWER = {
 };
 var COMPS = [
   { id: "rpl", name: "\u0420\u041F\u041B", type: "league", tier: 1, level: "1-\u0439 \u0443\u0440\u043E\u0432\u0435\u043D\u044C (16 \u043A\u043E\u043C\u0430\u043D\u0434)", logo: "/logos/leagues/rpl.svg" },
+  { id: "supercup", name: "\u0421\u0443\u043F\u0435\u0440\u043A\u0443\u0431\u043E\u043A \u0420\u043E\u0441\u0441\u0438\u0438", type: "cup", level: "\u0421\u0443\u043F\u0435\u0440\u043A\u0443\u0431\u043E\u043A \xB7 \u041C\u0430\u0442\u0447 \u0437\u0430 \u0442\u0440\u043E\u0444\u0435\u0439", logo: "/logos/leagues/supercup.svg" },
   { id: "cup", name: "\u041A\u0443\u0431\u043E\u043A \u0420\u043E\u0441\u0441\u0438\u0438", type: "cup", level: "\u041D\u0430\u0446\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0439 \u043A\u0443\u0431\u043E\u043A", logo: "/logos/leagues/cup.svg" },
   { id: "fnl", name: "\u041F\u0435\u0440\u0432\u0430\u044F \u043B\u0438\u0433\u0430", type: "league", tier: 2, level: "2-\u0439 \u0443\u0440\u043E\u0432\u0435\u043D\u044C (18 \u043A\u043E\u043C\u0430\u043D\u0434)", logo: "/logos/leagues/fnl.svg" },
   { id: "2la_gold", name: "\u0412\u0442\u043E\u0440\u0430\u044F \u043B\u0438\u0433\u0430 \u0410 \xB7 \u0417\u043E\u043B\u043E\u0442\u043E", type: "league", tier: 3, cat: "2la", level: "3-\u0439 \u0443\u0440\u043E\u0432\u0435\u043D\u044C (10 \u043A\u043E\u043C\u0430\u043D\u0434)", logo: "/logos/leagues/2la.svg" },
@@ -3253,6 +3276,7 @@ function load() {
     recalculateCupGroups(db.cupState2026, db.fixtures);
   }
   ensureInitialBudgets();
+  ensureSuperCupFixture();
   save();
 }
 var saveT = null;
@@ -3316,6 +3340,7 @@ function age(p, date) {
 }
 function roundLabel(f) {
   if (f.label) return f.label;
+  if (f.comp === "supercup") return "\u041C\u0430\u0442\u0447 \u0437\u0430 \u0421\u0443\u043F\u0435\u0440\u043A\u0443\u0431\u043E\u043A \u0420\u043E\u0441\u0441\u0438\u0438";
   if (f.comp === "cup") {
     if (f.cupPath === "rpl_group") {
       return `\u041F\u0443\u0442\u044C \u0420\u041F\u041B \xB7 ${f.round}-\u0439 \u0442\u0443\u0440`;
@@ -3553,6 +3578,36 @@ function ensureInitialBudgets() {
     changed = true;
   }
   if (changed) save();
+}
+function ensureSuperCupFixture(sName) {
+  const season = sName || S();
+  if (!Array.isArray(db.fixtures)) db.fixtures = [];
+  const exists = db.fixtures.some((f) => f.comp === "supercup" && f.season === season);
+  if (!exists) {
+    const zenit = db.teams.find((t) => t.name === "\u0417\u0435\u043D\u0438\u0442");
+    const krasnodar = db.teams.find((t) => t.name === "\u041A\u0440\u0430\u0441\u043D\u043E\u0434\u0430\u0440");
+    const homeTeam = zenit || db.teams.find((t) => t.comp === "rpl");
+    const awayTeam = krasnodar || db.teams.filter((t) => t.comp === "rpl" && t.id !== homeTeam?.id)[0];
+    if (homeTeam && awayTeam) {
+      db.fixtures.unshift({
+        id: uid(),
+        comp: "supercup",
+        season,
+        round: 1,
+        cupPath: "supercup",
+        label: "\u0421\u0443\u043F\u0435\u0440\u043A\u0443\u0431\u043E\u043A \u0420\u043E\u0441\u0441\u0438\u0438 \xB7 \u0424\u0438\u043D\u0430\u043B",
+        home: homeTeam.id,
+        away: awayTeam.id,
+        date: "2026-07-11",
+        time: "17:30",
+        stadium: "\xAB\u0410\u043A \u0411\u0430\u0440\u0441 \u0410\u0440\u0435\u043D\u0430\xBB (\u043D\u0435\u0439\u0442\u0440\u0430\u043B\u044C\u043D\u043E\u0435 \u043F\u043E\u043B\u0435, \u0433. \u041A\u0430\u0437\u0430\u043D\u044C)",
+        city: "\u041A\u0430\u0437\u0430\u043D\u044C",
+        status: "scheduled",
+        neutralField: true
+      });
+      save();
+    }
+  }
 }
 function calculateCupPrizeSuggestions() {
   const rplTeams = db.teams.filter((t) => t.comp === "rpl");
@@ -4815,7 +4870,7 @@ function finish(id) {
   m.motm = getMatchMotm(m, f, HName, AName, cH, cA);
   if (m.motm) f.motm = { pid: m.motm.pid, name: m.motm.name, rating: m.motm.rating };
   putMatch(id, m);
-  if (f.comp === "cup" && f.hg === f.ag && !f.pen) f.pen = shootout(f);
+  if ((f.comp === "cup" || f.comp === "supercup") && f.hg === f.ag && !f.pen) f.pen = shootout(f);
   f.status = "done";
   updateRefereeStats(f, m.events);
   if (f.comp === "cup") advanceCup();
@@ -4941,7 +4996,7 @@ async function bgResults(list) {
     f.hg = +x.hg;
     f.ag = +x.ag;
     f.note = x.note || "";
-    if (f.comp === "cup" && f.hg === f.ag) {
+    if ((f.comp === "cup" || f.comp === "supercup") && f.hg === f.ag) {
       const w = x.winner === "home" || x.winner === "away" ? x.winner : rng(f.id)() < 0.5 ? "home" : "away";
       f.pen = { hg: w === "home" ? 5 : 4, ag: w === "home" ? 4 : 5, winner: w };
     }
@@ -5016,6 +5071,7 @@ function genSeason(start, name) {
     cur = addDays(cur, 7);
   }
   db.fixtures = db.fixtures.filter((f) => f.season !== season);
+  ensureSuperCupFixture(season);
   const r = rng("season" + name);
   for (const comp of COMPS.filter((x) => x.type === "league")) {
     const c = comp.id;
@@ -6481,7 +6537,7 @@ app.post("/api/admin/fixture", admin, (req, res) => {
     f.ag = +req.body.ag;
     f.status = "done";
     f.st = null;
-    if (f.comp === "cup" && f.hg === f.ag) f.pen = shootout(f);
+    if ((f.comp === "cup" || f.comp === "supercup") && f.hg === f.ag) f.pen = shootout(f);
     invalidateAgg();
     advanceCup();
   }

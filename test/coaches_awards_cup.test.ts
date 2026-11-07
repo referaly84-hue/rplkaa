@@ -398,3 +398,15 @@ test('Budgets: db.budgetHistory is always an Array and slice/filter operations s
   const sliced = (Array.isArray(db.budgetHistory) ? db.budgetHistory : []).slice(-200).reverse();
   assert.ok(Array.isArray(sliced), 'Sliced history must be an array');
 });
+
+test('Super Cup tournament: regulations, branding and match generation', () => {
+  const db = JSON.parse(fs.readFileSync('data/db.json', 'utf8'));
+  const comps = db.comps || [];
+  const superCupComp = comps.find((c: any) => c.id === 'supercup');
+  assert.ok(superCupComp, 'Super Cup must exist in comps list');
+  assert.strictEqual(superCupComp.logo, '/logos/leagues/supercup.svg');
+  const superCupFx = (db.fixtures || []).find((f: any) => f.comp === 'supercup');
+  assert.ok(superCupFx, 'Super Cup fixture must be present for the season');
+  assert.ok(superCupFx.home && superCupFx.away, 'Super Cup must have home and away clubs');
+});
+

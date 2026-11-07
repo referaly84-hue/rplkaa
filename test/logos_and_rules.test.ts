@@ -120,8 +120,8 @@ test('satellite and reserve clubs resolve to parent club official crests', () =>
   assert.ok(getTeamLogo('Крылья Советов-2').includes('russia_krylya'));
 });
 
-test('competition logos dictionary contains RPL, FNL, Cup, 2LA, 2LB, and Media League emblems', () => {
-  const comps = ['rpl', 'fnl', 'cup', '2la', '2lb', 'media'];
+test('competition logos dictionary contains RPL, Supercup, FNL, Cup, 2LA, 2LB, and Media League emblems', () => {
+  const comps = ['rpl', 'supercup', 'fnl', 'cup', '2la', '2lb', 'media'];
   for (const c of comps) {
     assert.ok(COMPETITION_LOGOS[c], `Competition ${c} must have an emblem`);
     const diskPath = path.join(process.cwd(), 'public', COMPETITION_LOGOS[c].replace(/^\//, ''));

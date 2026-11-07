@@ -13,6 +13,10 @@ export interface ClubStyle {
 // Официальные логотипы соревнований
 export const COMPETITION_LOGOS: Record<string, string> = {
   rpl: '/logos/leagues/rpl.svg',
+  supercup: '/logos/leagues/supercup.svg',
+  'supercup-trophy': '/logos/leagues/supercup.svg',
+  'суперкубок': '/logos/leagues/supercup.svg',
+  'суперкубок россии': '/logos/leagues/supercup.svg',
   fnl: '/logos/leagues/fnl.svg',
   cup: '/logos/leagues/cup.svg',
   'cup-trophy': '/logos/leagues/cup-trophy.svg',
@@ -35,6 +39,7 @@ export const COMPETITION_LOGOS: Record<string, string> = {
 export function getCompetitionLogo(compId: string): string {
   const clean = (compId || '').toLowerCase().trim();
   if (COMPETITION_LOGOS[clean]) return COMPETITION_LOGOS[clean];
+  if (clean.includes('supercup') || clean.includes('суперкубок')) return COMPETITION_LOGOS.supercup;
   if (clean.startsWith('2la')) return COMPETITION_LOGOS['2la'];
   if (clean.startsWith('2lb')) return COMPETITION_LOGOS['2lb'];
   return COMPETITION_LOGOS.rpl;
