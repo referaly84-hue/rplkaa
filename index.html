@@ -1353,24 +1353,44 @@ async function pgTable(app, comp = 'rpl') {
       <div class="panel">
         <h3 style="margin:0 0 10px;display:flex;align-items:center;gap:6px"><span>⭐</span> Рекордсмены турнира</h3>
         <div style="display:flex;flex-direction:column;gap:6px;font-size:13.5px">
-          <div class="row sp" style="padding:5px 0;border-bottom:1px solid var(--line)">
-            <span>🥇 <b>«Зенит» Санкт-Петербург</b></span>
+          <div class="row sp" style="padding:6px 0;border-bottom:1px solid var(--line);align-items:center">
+            <span style="display:inline-flex;align-items:center;gap:8px">
+              <span>🥇</span>
+              <img class="t-logo" src="${teamLogo('Зенит')}" alt="Зенит" style="width:20px;height:20px;object-fit:contain" onerror="this.style.display='none'"/>
+              <b>«Зенит» Санкт-Петербург</b>
+            </span>
             <b style="color:var(--green)">9 титулов</b>
           </div>
-          <div class="row sp" style="padding:5px 0;border-bottom:1px solid var(--line)">
-            <span>🥈 <b>ЦСКА Москва</b></span>
+          <div class="row sp" style="padding:6px 0;border-bottom:1px solid var(--line);align-items:center">
+            <span style="display:inline-flex;align-items:center;gap:8px">
+              <span>🥈</span>
+              <img class="t-logo" src="${teamLogo('ЦСКА')}" alt="ЦСКА" style="width:20px;height:20px;object-fit:contain" onerror="this.style.display='none'"/>
+              <b>ЦСКА Москва</b>
+            </span>
             <b>7 титулов</b>
           </div>
-          <div class="row sp" style="padding:5px 0;border-bottom:1px solid var(--line)">
-            <span>🥉 <b>«Локомотив» Москва</b></span>
+          <div class="row sp" style="padding:6px 0;border-bottom:1px solid var(--line);align-items:center">
+            <span style="display:inline-flex;align-items:center;gap:8px">
+              <span>🥉</span>
+              <img class="t-logo" src="${teamLogo('Локомотив')}" alt="Локомотив" style="width:20px;height:20px;object-fit:contain" onerror="this.style.display='none'"/>
+              <b>«Локомотив» Москва</b>
+            </span>
             <b>3 титула</b>
           </div>
-          <div class="row sp" style="padding:5px 0;border-bottom:1px solid var(--line)">
-            <span>⭐ <b>«Рубин» Казань</b></span>
+          <div class="row sp" style="padding:6px 0;border-bottom:1px solid var(--line);align-items:center">
+            <span style="display:inline-flex;align-items:center;gap:8px">
+              <span>⭐</span>
+              <img class="t-logo" src="${teamLogo('Рубин')}" alt="Рубин" style="width:20px;height:20px;object-fit:contain" onerror="this.style.display='none'"/>
+              <b>«Рубин» Казань</b>
+            </span>
             <b>2 титула</b>
           </div>
-          <div class="row sp" style="padding:5px 0">
-            <span>⭐ <b>«Спартак» Москва</b></span>
+          <div class="row sp" style="padding:6px 0;align-items:center">
+            <span style="display:inline-flex;align-items:center;gap:8px">
+              <span>⭐</span>
+              <img class="t-logo" src="${teamLogo('Спартак')}" alt="Спартак" style="width:20px;height:20px;object-fit:contain" onerror="this.style.display='none'"/>
+              <b>«Спартак» Москва</b>
+            </span>
             <b>1 титул</b>
           </div>
         </div>

@@ -5546,7 +5546,10 @@ var pubFx = (f) => ({
   assistants: f.comp === "rpl" || f.comp === "cup" ? f.assistants || [] : [],
   reserveReferee: f.comp === "rpl" || f.comp === "cup" ? f.reserveReferee || null : null,
   varReferee: f.comp === "rpl" || f.comp === "cup" ? f.varReferee || null : null,
-  avarReferee: f.comp === "rpl" || f.comp === "cup" ? f.avarReferee || null : null
+  avarReferee: f.comp === "rpl" || f.comp === "cup" ? f.avarReferee || null : null,
+  stadium: f.stadium || (f.home ? team(f.home)?.stadium : null),
+  city: f.city || (f.home ? team(f.home)?.city : null),
+  neutralField: !!f.neutralField
 });
 app.post("/api/login", (req, res) => {
   const c = String(req.body.code || "").trim().toUpperCase();
