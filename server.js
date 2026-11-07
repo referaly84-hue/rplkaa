@@ -5604,9 +5604,24 @@ app.get("/api/transfers/top", (req, res) => {
     const scoreB = b.statsForNewClub?.impactScore !== void 0 ? b.statsForNewClub.impactScore : (pB?.goals || 0) * 4 + (pB?.assists || 0) * 2.5 + (pB?.matches || 0) * 1.2;
     return scoreB - scoreA;
   }).slice(0, 10);
+  const flops = [...approved].filter((t) => {
+    const amt = t.feeAmount !== void 0 ? t.feeAmount : parseFeeAmount(t.fee);
+    return amt > 0;
+  }).sort((a, b) => {
+    const amtA = a.feeAmount !== void 0 ? a.feeAmount : parseFeeAmount(a.fee);
+    const amtB = b.feeAmount !== void 0 ? b.feeAmount : parseFeeAmount(b.fee);
+    const pA = player(a.pid);
+    const pB = player(b.pid);
+    const impactA = a.statsForNewClub?.impactScore !== void 0 ? a.statsForNewClub.impactScore : (pA?.goals || 0) * 3 + (pA?.assists || 0) * 2 + (pA?.matches || 0) * 0.5 + Math.max(0, (pA?.rating || 6.5) - 6);
+    const impactB = b.statsForNewClub?.impactScore !== void 0 ? b.statsForNewClub.impactScore : (pB?.goals || 0) * 3 + (pB?.assists || 0) * 2 + (pB?.matches || 0) * 0.5 + Math.max(0, (pB?.rating || 6.5) - 6);
+    const flopScoreA = amtA / Math.max(0.1, impactA + 0.1);
+    const flopScoreB = amtB / Math.max(0.1, impactB + 0.1);
+    return flopScoreB - flopScoreA;
+  }).slice(0, 10);
   res.json({
     expensive: expensive.map(formatTransferForPublic),
     valuable: valuable.map(formatTransferForPublic),
+    flops: flops.map(formatTransferForPublic),
     totalCount: approved.length
   });
 });

@@ -901,7 +901,7 @@ async function pgHome(app) {
   const [fx, tb, topTr] = await Promise.all([
     api('/fixtures?comp=rpl'),
     api('/table/rpl'),
-    api('/transfers/top').catch(() => ({ expensive: [], valuable: [] }))
+    api('/transfers/top').catch(() => ({ expensive: [], valuable: [], flops: [] }))
   ]);
   const live = fx.filter(f => f.status === 'live');
   const next = fx.filter(f => f.status === 'scheduled').slice(0, 3);
@@ -939,6 +939,10 @@ async function pgHome(app) {
           <div style="font-size:12px;background:#f0fdf4;border-left:3px solid #22c55e;padding:4px 8px;border-radius:4px;color:#166534">
             <b>⚡ Польза для нового клуба:</b> ${e(t.stats?.summary || `${t.stats?.goals || 0} голов, ${t.stats?.assists || 0} ассистов`)} · Ср. оценка: <b>${Number(t.stats?.rating || 7.0).toFixed(2)}</b>
           </div>
+        ` : tab === 'flop' ? `
+          <div style="font-size:12px;background:#fef2f2;border-left:3px solid #ef4444;padding:4px 8px;border-radius:4px;color:#991b1b">
+            <b>📉 Провальный трансфер:</b> Переплата: <b>${e(t.fee)}</b> при низкой отдаче (${e(t.stats?.summary || `${t.stats?.goals || 0} голов в ${t.stats?.matches || 0} матчах`)}, оценка: <b>${Number(t.stats?.rating || 6.0).toFixed(2)}</b>)
+          </div>
         ` : `
           <div style="font-size:12px;background:#f8fafc;padding:3px 8px;border-radius:4px;color:var(--muted)">
             <b>Условия:</b> ${e(t.note || 'Полноценный трансфер')} · ${e(t.stats?.summary || '')}
@@ -949,9 +953,11 @@ async function pgHome(app) {
   }
 
   function renderTopTransfers(limit = 2) {
-    const list = trTab === 'expensive' ? (topTr?.expensive || []) : (topTr?.valuable || []);
+    const list = trTab === 'expensive'
+      ? (topTr?.expensive || [])
+      : (trTab === 'valuable' ? (topTr?.valuable || []) : (topTr?.flops || []));
     if (!list.length) {
-      return '<div class="empty" style="padding:16px 0;color:var(--muted)">В текущем сезоне трансферов пока не совершено.</div>';
+      return `<div class="empty" style="padding:16px 0;color:var(--muted)">${trTab === 'flop' ? 'Провальных трансферов с переплатой не обнаружено.' : 'В текущем сезоне трансферов пока не совершено.'}</div>`;
     }
     const sliced = limit ? list.slice(0, limit) : list;
     return sliced.map((t, idx) => renderTransferItem(t, idx, trTab)).join('');
@@ -960,10 +966,12 @@ async function pgHome(app) {
   function showTopTransfersModal() {
     let modalTab = trTab;
     function modalContent() {
-      const list = modalTab === 'expensive' ? (topTr?.expensive || []) : (topTr?.valuable || []);
+      const list = modalTab === 'expensive'
+        ? (topTr?.expensive || [])
+        : (modalTab === 'valuable' ? (topTr?.valuable || []) : (topTr?.flops || []));
       const bodyHtml = list.length
         ? list.slice(0, 10).map((t, idx) => renderTransferItem(t, idx, modalTab)).join('')
-        : '<div class="empty">Нет данных</div>';
+        : `<div class="empty">${modalTab === 'flop' ? 'Провальных трансферов с переплатой не обнаружено' : 'Нет данных'}</div>`;
 
       return `
         <div class="row sp" style="margin-bottom:12px">
@@ -979,6 +987,7 @@ async function pgHome(app) {
         <div class="tabs" style="margin-bottom:12px">
           <button id="m_btn_exp" class="${modalTab === 'expensive' ? 'on' : ''}">💎 Самые дорогие (Топ-10)</button>
           <button id="m_btn_val" class="${modalTab === 'valuable' ? 'on' : ''}">⚡ Самые выгодные (Топ-10)</button>
+          <button id="m_btn_flop" class="${modalTab === 'flop' ? 'on' : ''}">📉 Самые провальные (Топ-10)</button>
         </div>
         <div id="m_tr_body" style="max-height:60vh;overflow-y:auto;padding-right:4px">
           ${bodyHtml}
@@ -990,31 +999,28 @@ async function pgHome(app) {
       mEl.querySelector('#m_tr_close')?.addEventListener('click', () => m.remove());
       const bExp = mEl.querySelector('#m_btn_exp');
       const bVal = mEl.querySelector('#m_btn_val');
+      const bFlop = mEl.querySelector('#m_btn_flop');
       const bBody = mEl.querySelector('#m_tr_body');
       if (bExp && bVal && bBody) {
-        bExp.onclick = () => {
-          modalTab = 'expensive';
-          bExp.classList.add('on');
-          bVal.classList.remove('on');
-          const l = topTr?.expensive || [];
+        const updateModalTab = (tabName, btnOn) => {
+          modalTab = tabName;
+          [bExp, bVal, bFlop].forEach(b => b?.classList.remove('on'));
+          btnOn?.classList.add('on');
+          const l = modalTab === 'expensive'
+            ? (topTr?.expensive || [])
+            : (modalTab === 'valuable' ? (topTr?.valuable || []) : (topTr?.flops || []));
           bBody.innerHTML = l.length
-            ? l.slice(0, 10).map((t, idx) => renderTransferItem(t, idx, 'expensive')).join('')
-            : '<div class="empty">Нет данных</div>';
+            ? l.slice(0, 10).map((t, idx) => renderTransferItem(t, idx, modalTab)).join('')
+            : `<div class="empty">${modalTab === 'flop' ? 'Провальных трансферов с переплатой не обнаружено' : 'Нет данных'}</div>`;
         };
-        bVal.onclick = () => {
-          modalTab = 'valuable';
-          bVal.classList.add('on');
-          bExp.classList.remove('on');
-          const l = topTr?.valuable || [];
-          bBody.innerHTML = l.length
-            ? l.slice(0, 10).map((t, idx) => renderTransferItem(t, idx, 'valuable')).join('')
-            : '<div class="empty">Нет данных</div>';
-        };
+        bExp.onclick = () => updateModalTab('expensive', bExp);
+        bVal.onclick = () => updateModalTab('valuable', bVal);
+        bFlop && (bFlop.onclick = () => updateModalTab('flop', bFlop));
       }
     });
   }
 
-  const hasAnyTransfers = (topTr?.expensive?.length || 0) > 0 || (topTr?.valuable?.length || 0) > 0;
+  const hasAnyTransfers = (topTr?.expensive?.length || 0) > 0 || (topTr?.valuable?.length || 0) > 0 || (topTr?.flops?.length || 0) > 0;
 
   app.innerHTML = `<h1>Сезон ${e(S.st?.season || '2026/27')}</h1>
   ${live.length ? `<div class="panel"><h3><span class="live-dot"></span>Сейчас идут</h3>${live.map(fxRow).join('')}</div>` : ''}
@@ -1028,13 +1034,13 @@ async function pgHome(app) {
             <span style="font-size:18px">🔥</span>
             <h3 style="margin:0;display:inline-flex;align-items:center;gap:6px">
               Топ трансферы
-              <span class="tag" style="font-size:11px;background:#f1f5f9;color:var(--muted)">Топ-2</span>
             </h3>
           </div>
           <div class="row" style="gap:6px;align-items:center;flex-wrap:wrap">
             <div class="tabs" style="margin:0">
               <button id="btn_tr_exp" class="on" style="padding:4px 8px;font-size:12px">💎 Дорогие</button>
               <button id="btn_tr_val" style="padding:4px 8px;font-size:12px">⚡ Выгодные</button>
+              <button id="btn_tr_flop" style="padding:4px 8px;font-size:12px">📉 Провальные</button>
             </div>
             ${hasAnyTransfers ? `
               <button class="btn alt sm" id="open_top_transfers_modal" style="font-size:12px;padding:3px 8px;font-weight:700" title="Открыть окно с топ-10 трансферами">
@@ -1067,21 +1073,19 @@ async function pgHome(app) {
 
   const btnExp = $('#btn_tr_exp');
   const btnVal = $('#btn_tr_val');
+  const btnFlop = $('#btn_tr_flop');
   const box = $('#top_transfers_box');
 
   if (btnExp && btnVal && box) {
-    btnExp.onclick = () => {
-      trTab = 'expensive';
-      btnExp.classList.add('on');
-      btnVal.classList.remove('on');
+    const setTrTab = (tabName, btnOn) => {
+      trTab = tabName;
+      [btnExp, btnVal, btnFlop].forEach(b => b?.classList.remove('on'));
+      btnOn?.classList.add('on');
       box.innerHTML = renderTopTransfers(2);
     };
-    btnVal.onclick = () => {
-      trTab = 'valuable';
-      btnVal.classList.add('on');
-      btnExp.classList.remove('on');
-      box.innerHTML = renderTopTransfers(2);
-    };
+    btnExp.onclick = () => setTrTab('expensive', btnExp);
+    btnVal.onclick = () => setTrTab('valuable', btnVal);
+    btnFlop && (btnFlop.onclick = () => setTrTab('flop', btnFlop));
   }
 
   $('#tr_header_title')?.addEventListener('click', showTopTransfersModal);

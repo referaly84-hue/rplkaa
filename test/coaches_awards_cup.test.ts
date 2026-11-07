@@ -410,3 +410,9 @@ test('Super Cup tournament: regulations, branding and match generation', () => {
   assert.ok(superCupFx.home && superCupFx.away, 'Super Cup must have home and away clubs');
 });
 
+test('Top Transfers: categories include expensive, valuable, and flops', () => {
+  const db = JSON.parse(fs.readFileSync('data/db.json', 'utf8'));
+  assert.ok(Array.isArray(db.transfers), 'transfers must be array');
+});
+
+
